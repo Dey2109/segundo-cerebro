@@ -27,11 +27,17 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          # Usamos "#" como separador en vez de "/", porque las claves de API
-          # a veces contienen el carácter "/", y eso rompería el comando sed
-          # si usáramos "/" como separador (el error "Invalid or unexpected token"
-          # que viste era exactamente por esto: la clave se cortó a la mitad).
-          sed "s#PEGA_AQUI_TU_PROPIA_CLAVE_DE_GEMINI#$GEMINI_API_KEY#" gemini-config.example.js > gemini-config.js
+          # Usamos awk en vez de sed: awk recibe la clave como una variable
+          # separada (-v), así que no importa qué caracteres tenga adentro
+          # (/, #, etc.) — nunca se mezcla con la sintaxis del comando.
+          # "xargs" limpia espacios o saltos de línea invisibles que a veces
+          # quedan pegados al copiar/pegar un secret en GitHub.
+          KEY_LIMPIA=$(echo -n "$GEMINI_API_KEY" | xargs)
+          awk -v key="$KEY_LIMPIA" '{gsub("PEGA_AQUI_TU_PROPIA_CLAVE_DE_GEMINI", key); print}' gemini-config.example.js > gemini-config.js
+
+          # Verificación: mostramos solo la LARGO de la clave generada (no la clave completa,
+          # para no exponerla en los logs), así confirmamos que no quedó vacía ni cortada.
+          echo "Longitud de la clave insertada: ${#KEY_LIMPIA} caracteres"
 
       # Paso 3: preparar los archivos para GitHub Pages
       - name: Preparar Pages
