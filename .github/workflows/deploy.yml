@@ -1,0 +1,44 @@
+name: Desplegar a GitHub Pages
+
+# Este workflow se ejecuta automáticamente cada vez que subes cambios a "main"
+on:
+  push:
+    branches: [main]
+
+# Permisos necesarios para que Actions pueda publicar en GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Paso 1: descargar el código del repositorio
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      # Paso 2: crear gemini-config.js a partir de la plantilla,
+      # reemplazando el texto de ejemplo por la clave real guardada en Secrets.
+      # Esta clave NUNCA queda escrita en el repositorio, solo existe
+      # temporalmente durante este proceso de despliegue.
+      - name: Generar gemini-config.js con la clave real
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          sed "s/PEGA_AQUI_TU_PROPIA_CLAVE_DE_GEMINI/$GEMINI_API_KEY/" gemini-config.example.js > gemini-config.js
+
+      # Paso 3: preparar los archivos para GitHub Pages
+      - name: Preparar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir los archivos como artefacto de Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      # Paso 4: publicar en GitHub Pages
+      - name: Desplegar
+        id: deployment
+        uses: actions/deploy-pages@v4
