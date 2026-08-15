@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segundo Cerebro - Fase 1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Pantalla de login: se muestra mientras nadie ha iniciado sesión -->
+  <div id="pantalla-login" style="display:flex;">
+    <div class="login-card">
+      <p class="login-emoji">🧠</p>
+      <h1>Segundo Cerebro</h1>
+      <p class="login-subtitulo">Inicia sesión para ver y guardar tus propios links.</p>
+      <button id="btn-login">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
+        Iniciar sesión con Google
+      </button>
+    </div>
+  </div>
+
+  <!-- App principal: se muestra solo si ya iniciaste sesión -->
+  <div id="app-principal" style="display:none;">
+
+    <header>
+      <div class="barra-usuario">
+        <div id="info-usuario"></div>
+        <button id="btn-logout">Cerrar sesión</button>
+      </div>
+      <h1>🧠 Segundo Cerebro</h1>
+      <p>Tus links, resumidos y conectados por IA</p>
+    </header>
+
+    <main>
+      <!-- Formulario para agregar un link nuevo -->
+      <section class="agregar-link">
+        <input type="url" id="input-url" placeholder="Pega un link aquí, ej: https://ejemplo.com" required>
+        <input type="text" id="input-titulo" placeholder="Título (ej: Curso de JS moderno)">
+        <select id="input-categoria">
+          <option value="general">General</option>
+          <option value="programacion">Programación</option>
+          <option value="futbol">Fútbol</option>
+          <option value="gaming">Gaming</option>
+          <option value="estudio">Estudio / INFRAMEN</option>
+          <option value="otro">Otro</option>
+        </select>
+        <button id="btn-guardar">Guardar link</button>
+        <p id="aviso-duplicado" class="aviso-duplicado" style="display:none;"></p>
+      </section>
+
+      <!-- Digest semanal y vacíos de conocimiento -->
+      <section class="digest-section">
+        <h2>📊 Tu resumen</h2>
+        <div class="digest-botones">
+          <button id="btn-digest">🗓️ Digest de esta semana</button>
+          <button id="btn-vacios">🔍 Vacíos de conocimiento</button>
+        </div>
+        <div id="resultado-digest"></div>
+      </section>
+
+      <!-- Chat con tu segundo cerebro -->
+      <section class="chat-section">
+        <h2>💬 Pregúntale a tu segundo cerebro</h2>
+        <div class="chat-input-row">
+          <input type="text" id="input-pregunta" placeholder="Ej: ¿qué he guardado sobre fútbol?">
+          <button id="btn-preguntar">Preguntar</button>
+        </div>
+        <div id="respuesta-chat"></div>
+      </section>
+
+      <!-- Mapa visual de conexiones entre links -->
+      <section class="mapa-section">
+        <button id="btn-toggle-mapa">🕸️ Ver mapa de conexiones</button>
+        <div id="mapa-container" style="display:none;">
+          <svg id="grafo" width="100%" height="600"></svg>
+        </div>
+      </section>
+
+      <!-- Aquí se van a mostrar los links guardados -->
+      <section class="lista-links">
+        <h2>Tus links guardados</h2>
+
+        <div class="busqueda-row">
+          <input type="text" id="input-busqueda" placeholder="Buscar por significado, ej: goles increíbles">
+          <button id="btn-buscar">Buscar</button>
+          <button id="btn-limpiar-busqueda" title="Ver todos de nuevo">✕</button>
+        </div>
+
+        <div id="contenedor-links">
+          <p class="vacio">Todavía no has guardado ningún link.</p>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <!-- type="module" nos permite usar import/export de ES6 -->
+  <!-- D3.js para el mapa visual de conexiones -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="toast.js"></script>
+  <script type="module" src="auth-state.js"></script>
+  <script type="module" src="auth.js"></script>
+  <script type="module" src="gemini-config.js"></script>
+  <script type="module" src="app.js"></script>
+  <script type="module" src="digest.js"></script>
+  <script type="module" src="chat.js"></script>
+  <script type="module" src="grafo.js"></script>
+</body>
+</html>
