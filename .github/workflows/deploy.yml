@@ -27,7 +27,11 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          sed "s/PEGA_AQUI_TU_PROPIA_CLAVE_DE_GEMINI/$GEMINI_API_KEY/" gemini-config.example.js > gemini-config.js
+          # Usamos "#" como separador en vez de "/", porque las claves de API
+          # a veces contienen el carácter "/", y eso rompería el comando sed
+          # si usáramos "/" como separador (el error "Invalid or unexpected token"
+          # que viste era exactamente por esto: la clave se cortó a la mitad).
+          sed "s#PEGA_AQUI_TU_PROPIA_CLAVE_DE_GEMINI#$GEMINI_API_KEY#" gemini-config.example.js > gemini-config.js
 
       # Paso 3: preparar los archivos para GitHub Pages
       - name: Preparar Pages
