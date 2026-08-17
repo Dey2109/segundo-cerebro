@@ -117,6 +117,8 @@ segundo-cerebro/
 ## 📄 Licencia
 
 Proyecto personal con fines educativos.
+Autor: AYOOOOO :D
+21.09.23.
 
 ---
 
